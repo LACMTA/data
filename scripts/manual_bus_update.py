@@ -8,8 +8,9 @@ Steps:
   1. Prompt for a path to a zip of new GTFS files.
   2. Unzip those files into temp/working-gtfs/current/gtfs_bus/.
   3. Copy feed_info.txt from gtfs-unzipped/current/gtfs_bus/ into the working
-     directory, then prompt for feed_start_date and feed_end_date and write
-     those values into the working copy of feed_info.txt.
+     directory, then derive feed_start_date and feed_end_date from the
+     earliest start_date and latest end_date in the newly imported calendar.txt,
+     and write those values into the working copy of feed_info.txt.
   4. On success, overwrite gtfs-unzipped/current/gtfs_bus/ with the working
      directory.
 """
@@ -80,15 +81,24 @@ print("\n[2/3] Updating feed_info.txt ...")
 
 shutil.copy2(source_feed_info, working_feed_info)
 
-feed_start_date = input("  feed_start_date (YYYYMMDD): ").strip()
-feed_end_date = input("  feed_end_date   (YYYYMMDD): ").strip()
+# Derive date range from calendar.txt in the newly imported GTFS data
+working_calendar = WORKING_BUS_DIR / "calendar.txt"
+if not working_calendar.exists():
+    raise FileNotFoundError(
+        f"calendar.txt not found in working directory: {working_calendar}"
+    )
 
-# Basic format validation
-for label, value in [("feed_start_date", feed_start_date), ("feed_end_date", feed_end_date)]:
-    if not value.isdigit() or len(value) != 8:
-        raise ValueError(
-            f"Invalid {label} '{value}'. Expected 8-digit date in YYYYMMDD format."
-        )
+calendar_df = pd.read_csv(working_calendar, dtype=str)
+
+if "start_date" not in calendar_df.columns or "end_date" not in calendar_df.columns:
+    raise ValueError(
+        "calendar.txt is missing expected columns 'start_date' and/or 'end_date'."
+    )
+
+feed_start_date = calendar_df["start_date"].min()
+feed_end_date = calendar_df["end_date"].max()
+
+print(f"    Derived from calendar.txt: feed_start_date = {feed_start_date}, feed_end_date = {feed_end_date}")
 
 df = pd.read_csv(working_feed_info, dtype=str)
 
