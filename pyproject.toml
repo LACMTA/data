@@ -47,4 +47,4 @@ revert-gtfs = [
     "unzip"
 ]
 
-nightly-rail-pathways = ["unzip", "merge-rail-pathways --gtfs-target gitlab --pathways-source current", "zip", "validate"]
+nightly-rail-pathways = ["unzip --service rail", "merge-rail-pathways --gtfs-target gitlab --pathways-source current", "zip --service rail", "validate --service rail"]
