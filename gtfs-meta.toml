@@ -4,5 +4,5 @@ included_stops = ["80134S", "80138S"]
 
 [gitlab]
 # Current source of latest GTFS
-bus = "https://gitlab.com/LACMTA/gtfs_bus/-/raw/master/gtfs_bus.zip?ref_type=heads&inline=false"
+bus = "https://gitlab.com/LACMTA/gtfs_bus/-/raw/weekly-updated-service/gtfs_bus.zip?ref_type=heads&inline=false"
 rail = "https://gitlab.com/LACMTA/gtfs_rail/-/raw/master/gtfs_rail.zip?ref_type=heads&inline=false"
