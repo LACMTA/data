@@ -1,0 +1,39 @@
+name: Nightly Rail Pathways
+
+on:
+  schedule:
+    - cron: "0 11 * * *" # 3am PST (UTC-8); runs at 4am during PDT
+  workflow_dispatch:
+
+jobs:
+  nightly-rail-pathways:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: Run nightly rail pathways
+        run: uv run poe nightly-rail-pathways
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "chore: nightly rail pathways update [skip ci]"
+          git push
