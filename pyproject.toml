@@ -46,3 +46,5 @@ revert-gtfs = [
     { cmd = "git checkout gtfs validation-output" },
     "unzip"
 ]
+
+nightly-rail-pathways = ["unzip", "merge-rail-pathways --gtfs-target gitlab --pathways-source current", "zip", "validate"]
