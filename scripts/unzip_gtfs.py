@@ -1,6 +1,6 @@
 """
 Unzips GTFS feeds into gtfs-unzipped/{timeframe}/{feed}/.
-Usage: python scripts/unzip_gtfs.py [--timeframe {current,future,weekly-update}]
+Usage: python scripts/unzip_gtfs.py [--timeframe {current,future}]
        [--service {bus,rail}]
 By default, unzips all timeframes and services that exist on disk.
 """
@@ -10,7 +10,7 @@ import shutil
 import zipfile
 from pathlib import Path
 
-TIMEFRAMES = ["current", "future", "weekly-update"]
+TIMEFRAMES = ["current", "future"]
 SERVICES = ["bus", "rail"]
 
 parser = argparse.ArgumentParser()

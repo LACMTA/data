@@ -1,7 +1,7 @@
 """
 Runs the GTFS validator JAR against a GTFS feed.
 Usage: python scripts/run_validator.py [--service {bus,rail}]
-       [--timeframe {current,future,weekly-update}]
+       [--timeframe {current,future}]
 By default, validates all timeframes and services for which a .zip file exists on disk.
 Reads config from pyproject.toml. Downloads the JAR automatically if missing.
 """
@@ -14,7 +14,7 @@ import sys
 import tomllib
 from pathlib import Path
 
-TIMEFRAMES = ["current", "future", "weekly-update"]
+TIMEFRAMES = ["current", "future"]
 SERVICES = ["bus", "rail"]
 
 parser = argparse.ArgumentParser()

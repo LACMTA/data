@@ -49,7 +49,7 @@ uv run poe download-validator
 
 ### `unzip`
 
-Unzips GTFS feed `.zip` files from `gtfs/{timeframe}/` into `gtfs-unzipped/{timeframe}/{feed}/`. By default, unzips all timeframes (`current`, `future`, `weekly-update`) and services (`bus`, `rail`) that exist on disk. Accepts optional `--timeframe` and `--service` flags to narrow the scope.
+Unzips GTFS feed `.zip` files from `gtfs/{timeframe}/` into `gtfs-unzipped/{timeframe}/{feed}/`. By default, unzips all timeframes (`current`, `future`) and services (`bus`, `rail`) that exist on disk. Accepts optional `--timeframe` and `--service` flags to narrow the scope.
 
 ```bash
 uv run poe unzip
@@ -79,14 +79,14 @@ Downloads the current bus and rail GTFS `.zip` files from their GitLab permalink
 uv run poe fetch-current-gitlab
 ```
 
-### `bus-weekly-update`
+### `bus-ftp-calendar-dates-update`
 
-Prepares a weekly-update bus GTFS feed by merging updated calendar data from the FTP server into the current bus feed.
+Updates the current bus GTFS feed by merging updated calendar data from the FTP server into the current bus feed.
 
 Requires `FTP_HOST`, `FTP_USER`, and `FTP_PASSWORD` to be set in `.env`.
 
 ```bash
-uv run poe bus-weekly-update
+uv run poe bus-ftp-calendar-dates-update
 ```
 
 ### `manual-bus-update`

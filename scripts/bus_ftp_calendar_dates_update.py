@@ -3,11 +3,11 @@ Weekly update script for the bus GTFS feed.
 
 Steps:
   1. Copy gtfs-unzipped/current/gtfs_bus/ into a working directory at
-     temp/working-gtfs/weekly-update/gtfs_bus/.
+     temp/working-gtfs/current/gtfs_bus/.
   2. Fetch calendar_dates.txt from an FTP server and save it to temp/.
   3. Merge the fetched calendar_dates.txt with the one already in the working
      directory, deduplicate, and write the result back.
-  4. On success, overwrite gtfs-unzipped/weekly-update/gtfs_bus/ with the
+  4. On success, overwrite gtfs-unzipped/current/gtfs_bus/ with the
      finished working directory.
 
 Required environment variables (set in a .env file at the project root):
@@ -35,8 +35,7 @@ UNZIPPED_DIR = PROJECT_ROOT / "gtfs-unzipped"
 TEMP_DIR = PROJECT_ROOT / "temp"
 
 CURRENT_BUS_DIR = UNZIPPED_DIR / "current" / "gtfs_bus"
-WEEKLY_BUS_DIR = UNZIPPED_DIR / "weekly-update" / "gtfs_bus"
-WORKING_BUS_DIR = TEMP_DIR / "working-gtfs" / "weekly-update" / "gtfs_bus"
+WORKING_BUS_DIR = TEMP_DIR / "working-gtfs" / "current" / "gtfs_bus"
 
 FTP_HOST = os.environ["FTP_HOST"]
 FTP_USER = os.environ["FTP_USER"]
@@ -105,18 +104,18 @@ print(
 )
 
 # ---------------------------------------------------------------------------
-# Step 4: Overwrite gtfs-unzipped/weekly-update/gtfs_bus/ with working copy
+# Step 4: Overwrite gtfs-unzipped/current/gtfs_bus/ with working copy
 # ---------------------------------------------------------------------------
 
 print(
     f"[4/4] Copying {WORKING_BUS_DIR.relative_to(PROJECT_ROOT)} "
-    f"→ {WEEKLY_BUS_DIR.relative_to(PROJECT_ROOT)} ..."
+    f"→ {CURRENT_BUS_DIR.relative_to(PROJECT_ROOT)} ..."
 )
 
-if WEEKLY_BUS_DIR.exists():
-    shutil.rmtree(WEEKLY_BUS_DIR)
+if CURRENT_BUS_DIR.exists():
+    shutil.rmtree(CURRENT_BUS_DIR)
 
-shutil.copytree(WORKING_BUS_DIR, WEEKLY_BUS_DIR)
+shutil.copytree(WORKING_BUS_DIR, CURRENT_BUS_DIR)
 print("    Done.")
 
 print("\nWeekly update complete.")
