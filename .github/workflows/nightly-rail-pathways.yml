@@ -31,9 +31,11 @@ jobs:
         run: uv run poe nightly-rail-pathways
 
       - name: Commit and push changes
+        # only commit if the GTFS has actually changed
+        # this prevents us from committing validator output with no GTFS change
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git diff --cached --quiet || git commit -m "chore: nightly rail pathways update [skip ci]"
+          git diff --cached --quiet gtfs || git commit -m "chore: nightly rail pathways update"
           git push
