@@ -290,12 +290,33 @@ scoped_stops_aligned = scoped_stops.reindex(columns=target_stops_df.columns, fil
 # Index both DataFrames on stop_id and update target rows with scoped data
 target_stops_df = target_stops_df.set_index("stop_id")
 scoped_stops_aligned = scoped_stops_aligned.set_index("stop_id")
-target_stops_df.update(scoped_stops_aligned)
+# Overwrite existing target rows with scoped data, and append any new ones
+existing_mask = scoped_stops_aligned.index.isin(target_stops_df.index)
+n_updated = existing_mask.sum()
+n_added = (~existing_mask).sum()
+print(f"  Overwriting {n_updated} existing stop(s), adding {n_added} new stop(s).")
+target_stops_df = pd.concat([
+    target_stops_df[~target_stops_df.index.isin(scoped_stops_aligned.index)],
+    scoped_stops_aligned
+])
 
-# Append any scoped stops that do not yet exist in the target
-new_stops = scoped_stops_aligned[~scoped_stops_aligned.index.isin(target_stops_df.index)]
-if not new_stops.empty:
-    target_stops_df = pd.concat([target_stops_df, new_stops])
+# Remove stops that are children of INCLUDED_STOPS in the target
+# but don't exist in the pathways source (keyed on stop_id).
+target_child_ids: set[str] = set(INCLUDED_STOPS)
+while True:
+    children = set(
+        target_stops_df.loc[target_stops_df["parent_station"].isin(target_child_ids)].index
+    )
+    new_children = children - target_child_ids
+    if not new_children:
+        break
+    target_child_ids.update(new_children)
+
+source_stop_ids = set(scoped_stops_aligned.index)
+stale_stop_ids = (target_child_ids - set(INCLUDED_STOPS)) - source_stop_ids
+n_deleted = len(stale_stop_ids)
+print(f"  Removing {n_deleted} stale child stop(s) present in target but absent from pathways source.")
+target_stops_df = target_stops_df[~target_stops_df.index.isin(stale_stop_ids)]
 
 target_stops_df = target_stops_df.reset_index()
 target_stops_df.to_csv(target_stops_path, index=False)
