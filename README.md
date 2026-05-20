@@ -35,9 +35,16 @@ cp .env.example .env
 ## Scripts
 
 - All scripts are run via `uv run poe <task>`.
-- All scripts work from and update **unzipped** GTFS files, which are not checked into the repo due to size.
+- All scripts, with the exception of `validate`, work from and update **unzipped** GTFS files, which are not checked into the repo due to size.
 - Start by running `uv run poe unzip`, which will unzip all files into `gtfs-unzipped`, which is ignored by git.
 - Remember to run `uv run poe zip` before committing, only the zipped archives are watched by git.
+
+## Configuration
+
+Configuration for GTFS handling is defined in `gtfs-config.toml`
+
+- **`timeframes` and `services`**: We divide GTFS based on `timeframe` and `service`. GTFS files are saved as `gtfs/{timeframe}/gtfs_{service}.zip`.
+- **`pathways`**: Defines which top-level stops should be merged by the `merge-rail-pathways` script.
 
 ### `download-validator`
 
@@ -105,7 +112,7 @@ uv run poe manual-bus-update
 
 ### `merge-rail-pathways`
 
-Merges GTFS pathways data (`pathways.txt`, `levels.txt`, and related stops from `stops.txt`) from one GTFS feed into another. The set of stations to include is controlled by `included_stops` in `gtfs-meta.toml`. Requires `--pathways-source` and `--gtfs-target` arguments:
+Merges GTFS pathways data (`pathways.txt`, `levels.txt`, and related stops from `stops.txt`) from one GTFS feed into another. The set of stations to include is controlled by `included_stops` in `gtfs-config.toml`. Requires `--pathways-source` and `--gtfs-target` arguments:
 
 | Argument            | Values    | Description                                                           |
 | ------------------- | --------- | --------------------------------------------------------------------- |

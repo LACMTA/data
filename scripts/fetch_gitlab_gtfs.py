@@ -14,11 +14,11 @@ import urllib.request
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
-# Configuration – read GitLab permalinks from gtfs-meta.toml
+# Configuration – read GitLab permalinks from gtfs-config.toml
 # ---------------------------------------------------------------------------
 
 PROJECT_ROOT = Path(__file__).parent.parent
-META_PATH = PROJECT_ROOT / "gtfs-meta.toml"
+META_PATH = PROJECT_ROOT / "gtfs-config.toml"
 
 with META_PATH.open("rb") as f:
     _meta = tomllib.load(f)

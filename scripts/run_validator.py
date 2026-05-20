@@ -1,7 +1,7 @@
 """
 Runs the GTFS validator JAR against a GTFS feed.
-Usage: python scripts/run_validator.py [--service {bus,rail}]
-       [--timeframe {current,future}]
+Usage: python scripts/run_validator.py [--service SERVICE] [--timeframe TIMEFRAME]
+Timeframes and services are defined in gtfs-config.toml.
 By default, validates all timeframes and services for which a .zip file exists on disk.
 Reads config from pyproject.toml. Downloads the JAR automatically if missing.
 """
@@ -14,8 +14,13 @@ import sys
 import tomllib
 from pathlib import Path
 
-TIMEFRAMES = ["current", "future"]
-SERVICES = ["bus", "rail"]
+PROJECT_ROOT = Path(__file__).parent.parent
+
+with (PROJECT_ROOT / "gtfs-config.toml").open("rb") as f:
+    _meta = tomllib.load(f)
+
+TIMEFRAMES = _meta["gtfs"]["timeframes"]
+SERVICES = _meta["gtfs"]["services"]
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -32,7 +37,6 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-PROJECT_ROOT = Path(__file__).parent.parent
 PYPROJECT = PROJECT_ROOT / "pyproject.toml"
 JAR = PROJECT_ROOT / "gtfs-validator.jar"
 

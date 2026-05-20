@@ -1,3 +1,7 @@
+[gtfs]
+timeframes = ["current", "future", "events"]
+services = ["bus", "rail"]
+
 [pathways]
 # Stops for which we currently have good pathways data
 included_stops = ["80134S", "80138S", "80139S"]
