@@ -17,7 +17,7 @@ Usage:
 
 --gtfs-target
   current  Use gtfs-unzipped/current/gtfs_rail/ as the GTFS to merge pathways data into.
-  gitlab   Fetch the rail GTFS zip from the GitLab URL in gtfs-meta.toml and use it as the
+  gitlab   Fetch the rail GTFS zip from the GitLab URL in gtfs-config.toml and use it as the
            GTFS to merge pathways data into.
   prompt   Prompt for a path to a .zip archive of GTFS to merge pathways data onto.
 """
@@ -36,7 +36,7 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 
 PROJECT_ROOT = Path(__file__).parent.parent
-META_PATH = PROJECT_ROOT / "gtfs-meta.toml"
+META_PATH = PROJECT_ROOT / "gtfs-config.toml"
 UNZIPPED_DIR = PROJECT_ROOT / "gtfs-unzipped"
 TEMP_DIR = PROJECT_ROOT / "temp"
 
@@ -195,7 +195,7 @@ print("\nReady to merge pathways data.")
 print("\n=== Step 3: Identify stops in the pathways source ===")
 
 INCLUDED_STOPS: list[str] = META["pathways"]["included_stops"]
-print(f"Included parent station stop_ids from gtfs-meta.toml: {INCLUDED_STOPS}")
+print(f"Included parent station stop_ids from gtfs-config.toml: {INCLUDED_STOPS}")
 
 stops_df = pd.read_csv(PATHWAYS_SOURCE_DIR / "stops.txt", dtype=str).fillna("")
 
