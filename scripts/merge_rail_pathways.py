@@ -300,6 +300,24 @@ target_stops_df = pd.concat([
     scoped_stops_aligned
 ])
 
+# Remove stops that are children of INCLUDED_STOPS in the target
+# but don't exist in the pathways source (keyed on stop_id).
+target_child_ids: set[str] = set(INCLUDED_STOPS)
+while True:
+    children = set(
+        target_stops_df.loc[target_stops_df["parent_station"].isin(target_child_ids)].index
+    )
+    new_children = children - target_child_ids
+    if not new_children:
+        break
+    target_child_ids.update(new_children)
+
+source_stop_ids = set(scoped_stops_aligned.index)
+stale_stop_ids = (target_child_ids - set(INCLUDED_STOPS)) - source_stop_ids
+n_deleted = len(stale_stop_ids)
+print(f"  Removing {n_deleted} stale child stop(s) present in target but absent from pathways source.")
+target_stops_df = target_stops_df[~target_stops_df.index.isin(stale_stop_ids)]
+
 target_stops_df = target_stops_df.reset_index()
 target_stops_df.to_csv(target_stops_path, index=False)
 print(
