@@ -315,7 +315,7 @@ while True:
 source_stop_ids = set(scoped_stops_aligned.index)
 stale_stop_ids = (target_child_ids - set(INCLUDED_STOPS)) - source_stop_ids
 n_deleted = len(stale_stop_ids)
-print(f"  Removing {n_deleted} stale child stop(s) present in target but absent from pathways source.")
+print(f"  Removing {n_deleted} stale child stop(s) present in target but absent from pathways source.")  # noqa: E501
 target_stops_df = target_stops_df[~target_stops_df.index.isin(stale_stop_ids)]
 
 target_stops_df = target_stops_df.reset_index()
@@ -348,10 +348,38 @@ else:
 print("\nMerge complete.")
 
 # ---------------------------------------------------------------------------
-# Step 7: Overwrite gtfs-unzipped/current/gtfs_rail/ with the merged target
+# Step 7: Clean up Interline quirks
 # ---------------------------------------------------------------------------
 
-print("\n=== Step 7: Move merged GTFS to gtfs-unzipped/current/gtfs_rail/ ===")
+# 7A: Backfill missing stop_code from stop_id
+
+print("\n=== Step 7A: Fix naming schema for any non-compliant nodes ===")
+
+
+
+# 7B: Backfill missing stop_code from stop_id
+
+print("\n=== Step 7B: Backfill missing stop_code from stop_id ===")
+
+target_stops_df = pd.read_csv(target_stops_path, dtype=str).fillna("")
+
+missing_code_mask = target_stops_df["stop_code"] == ""
+n_backfilled = int(missing_code_mask.sum())
+
+if n_backfilled > 0:
+    target_stops_df.loc[missing_code_mask, "stop_code"] = target_stops_df.loc[
+        missing_code_mask, "stop_id"
+    ]
+    target_stops_df.to_csv(target_stops_path, index=False)
+    print(f"  Backfilled stop_code from stop_id for {n_backfilled} stop(s).")
+else:
+    print("  All stops already have a stop_code – nothing to backfill.")
+
+# ---------------------------------------------------------------------------
+# Step 8: Overwrite gtfs-unzipped/current/gtfs_rail/ with the merged target
+# ---------------------------------------------------------------------------
+
+print("\n=== Step 8: Move merged GTFS to gtfs-unzipped/current/gtfs_rail/ ===")
 
 if CURRENT_RAIL_DIR.exists():
     shutil.rmtree(CURRENT_RAIL_DIR)
