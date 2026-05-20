@@ -86,6 +86,40 @@ Downloads the current bus and rail GTFS `.zip` files from their GitLab permalink
 uv run poe fetch-current-gitlab
 ```
 
+### `fetch-events-gtfs`
+
+Downloads the events GTFS `.zip` file from the URL defined as `EVENTS_GTFS_URL` in `.env` and saves it as `gtfs/current/gtfs_events.zip`.
+
+Requires `EVENTS_GTFS_URL` to be set in `.env`.
+
+```bash
+uv run poe fetch-events-gtfs
+```
+
+### `fetch-process-wc-events`
+
+Fetches the events GTFS, unzips it, applies WC-specific transformations, re-zips, and validates.
+
+Requires `EVENTS_GTFS_URL` to be set in `.env`.
+
+```bash
+uv run poe fetch-process-wc-events
+```
+
+### `process-wc-events-gtfs`
+
+Applies WC-specific transformations to the unzipped current events GTFS. Modifies `gtfs-unzipped/current/gtfs_events/routes.txt` in place:
+
+- Clears `route_short_name` (leaves only `route_long_name` populated)
+- Sets `route_color` to `5949a7`
+- Sets `route_text_color` to `000000`
+
+Requires the events GTFS to be unzipped first (`uv run poe unzip`).
+
+```bash
+uv run poe process-wc-events-gtfs
+```
+
 ### `bus-ftp-calendar-dates-update`
 
 Updates the current bus GTFS feed by merging updated calendar data from the FTP server into the current bus feed.
