@@ -32,19 +32,19 @@ Some scripts require FTP credentials. Copy `.env.example` to `.env` and fill in 
 cp .env.example .env
 ```
 
+## Configuration
+
+Configuration for GTFS handling is defined in `gtfs-config.toml`
+
+- **`timeframes` and `services`**: We divide GTFS based on `timeframe` and `service`. GTFS files are saved as `gtfs/{timeframe}/gtfs_{service}.zip`.
+- **`pathways`**: Defines which top-level stops should be merged by the `merge-rail-pathways` script (see below).
+
 ## Scripts
 
 - All scripts are run via `uv run poe <task>`.
 - All scripts, with the exception of `validate`, work from and update **unzipped** GTFS files, which are not checked into the repo due to size.
 - Start by running `uv run poe unzip`, which will unzip all files into `gtfs-unzipped`, which is ignored by git.
 - Remember to run `uv run poe zip` before committing, only the zipped archives are watched by git.
-
-## Configuration
-
-Configuration for GTFS handling is defined in `gtfs-config.toml`
-
-- **`timeframes` and `services`**: We divide GTFS based on `timeframe` and `service`. GTFS files are saved as `gtfs/{timeframe}/gtfs_{service}.zip`.
-- **`pathways`**: Defines which top-level stops should be merged by the `merge-rail-pathways` script.
 
 ### `download-validator`
 
