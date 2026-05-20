@@ -351,13 +351,7 @@ print("\nMerge complete.")
 # Step 7: Clean up Interline quirks
 # ---------------------------------------------------------------------------
 
-# 7A: Backfill missing stop_code from stop_id
-
-print("\n=== Step 7A: Fix naming schema for any non-compliant nodes ===")
-
-
-
-# 7B: Backfill missing stop_code from stop_id
+# Backfill missing stop_code from stop_id
 
 print("\n=== Step 7B: Backfill missing stop_code from stop_id ===")
 
