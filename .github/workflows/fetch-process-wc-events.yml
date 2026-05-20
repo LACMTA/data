@@ -1,0 +1,43 @@
+name: Fetch and Process WC Events
+
+on:
+  schedule:
+    - cron: "0 11 * * *" # 3am PST (UTC-8); runs at 4am during PDT
+  workflow_dispatch:
+
+jobs:
+  fetch-process-wc-events:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: Fetch and process WC events
+        env:
+          EVENTS_GTFS_URL: ${{ secrets.EVENTS_GTFS_URL }}
+        run: uv run poe fetch-process-wc-events
+
+      - name: Commit and push changes
+        # only commit if the GTFS has actually changed
+        # this prevents us from committing validator output with no GTFS change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet gtfs || git commit -m "chore: fetch and process WC events update"
+          git push
