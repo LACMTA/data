@@ -290,12 +290,15 @@ scoped_stops_aligned = scoped_stops.reindex(columns=target_stops_df.columns, fil
 # Index both DataFrames on stop_id and update target rows with scoped data
 target_stops_df = target_stops_df.set_index("stop_id")
 scoped_stops_aligned = scoped_stops_aligned.set_index("stop_id")
-target_stops_df.update(scoped_stops_aligned)
-
-# Append any scoped stops that do not yet exist in the target
-new_stops = scoped_stops_aligned[~scoped_stops_aligned.index.isin(target_stops_df.index)]
-if not new_stops.empty:
-    target_stops_df = pd.concat([target_stops_df, new_stops])
+# Overwrite existing target rows with scoped data, and append any new ones
+existing_mask = scoped_stops_aligned.index.isin(target_stops_df.index)
+n_updated = existing_mask.sum()
+n_added = (~existing_mask).sum()
+print(f"  Overwriting {n_updated} existing stop(s), adding {n_added} new stop(s).")
+target_stops_df = pd.concat([
+    target_stops_df[~target_stops_df.index.isin(scoped_stops_aligned.index)],
+    scoped_stops_aligned
+])
 
 target_stops_df = target_stops_df.reset_index()
 target_stops_df.to_csv(target_stops_path, index=False)
