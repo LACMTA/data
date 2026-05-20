@@ -1,6 +1,6 @@
 [gtfs]
-timeframes = ["current", "future", "events"]
-services = ["bus", "rail"]
+timeframes = ["current", "future"]
+services = ["bus", "rail", "events"]
 
 [pathways]
 # Stops for which we currently have good pathways data

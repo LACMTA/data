@@ -37,6 +37,8 @@ unzip = "python scripts/unzip_gtfs.py"
 zip = "python scripts/zip_gtfs.py"
 validate = "python scripts/run_validator.py"
 fetch-current-gitlab = "python scripts/fetch_gitlab_gtfs.py"
+fetch-events-gtfs = "python scripts/fetch_events_gtfs.py"
+process-wc-events-gtfs = "python scripts/process_wc_events_gtfs.py"
 bus-ftp-calendar-dates-update = "python scripts/bus_ftp_calendar_dates_update.py"
 manual-bus-update = "python scripts/manual_bus_update.py"
 merge-rail-pathways = "python scripts/merge_rail_pathways.py"
@@ -48,3 +50,5 @@ revert-gtfs = [
 ]
 
 nightly-rail-pathways = ["unzip --service rail", "merge-rail-pathways --gtfs-target gitlab --pathways-source current", "zip --service rail", "validate --service rail"]
+
+fetch-process-wc-events = ["fetch-events-gtfs", "unzip --service events", "process-wc-events-gtfs", "zip --service events", "validate --service events"]
