@@ -333,7 +333,7 @@ if scoped_pathways is not None:
     print(f"pathways.txt – wrote {len(scoped_pathways)} rows.")
 else:
     print(
-        """WARNING: No pathways data found in pathways source. Are you sure you provided the right file?"""
+        """WARNING: No pathways data found in pathways source. Are you sure you provided the right file?"""  # noqa: E501
     )  # noqa: E501
 
 # --- levels.txt ---
