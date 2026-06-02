@@ -23,7 +23,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 ROUTES_FILE = PROJECT_ROOT / "gtfs-unzipped" / "current" / "gtfs_events" / "routes.txt"
 
 ROUTE_COLOR = "5949a7"
-ROUTE_TEXT_COLOR = "000000"
+ROUTE_TEXT_COLOR = "ffffff"
 
 # Maps route_id -> two-letter prefix to prepend to route_long_name
 ROUTE_PREFIX = {
